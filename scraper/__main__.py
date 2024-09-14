@@ -57,6 +57,14 @@ def main():
         )
 
         parser.add_argument(
+            "-i",
+            "--tweet",
+            type=str,
+            default=None,
+            help="Tweet ID. Scrape tweet replies to a tweet ID.",
+        )
+
+        parser.add_argument(
             "-u",
             "--username",
             type=str,
@@ -126,6 +134,8 @@ def main():
 
         if args.username is not None:
             tweet_type_args.append(args.username)
+        if args.tweet is not None:
+            tweet_type_args.append(args.tweet)
         if args.hashtag is not None:
             tweet_type_args.append(args.hashtag)
         if args.query is not None:
@@ -134,7 +144,7 @@ def main():
         additional_data: list = args.add.split(",")
 
         if len(tweet_type_args) > 1:
-            print("Please specify only one of --username, --hashtag, or --query.")
+            print("Please specify only one of --username, --tweet, --hashtag, or --query.")
             sys.exit(1)
 
         if args.latest and args.top:
@@ -152,6 +162,7 @@ def main():
                 max_tweets=args.tweets,
                 no_tweets_limit= args.no_tweets_limit if args.no_tweets_limit is not None else True,
                 scrape_username=args.username,
+                scrape_tweet=args.tweet,
                 scrape_hashtag=args.hashtag,
                 scrape_query=args.query,
                 scrape_latest=args.latest,

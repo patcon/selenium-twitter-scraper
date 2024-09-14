@@ -40,6 +40,7 @@ class Twitter_Scraper:
         password,
         max_tweets=50,
         scrape_username=None,
+        scrape_tweet=None,
         scrape_hashtag=None,
         scrape_query=None,
         scrape_poster_details=False,
@@ -58,6 +59,7 @@ class Twitter_Scraper:
         self.scraper_details = {
             "type": None,
             "username": None,
+            "tweet": None,
             "hashtag": None,
             "query": None,
             "tab": None,
@@ -72,6 +74,7 @@ class Twitter_Scraper:
         self._config_scraper(
             max_tweets,
             scrape_username,
+            scrape_tweet,
             scrape_hashtag,
             scrape_query,
             scrape_latest,
@@ -83,6 +86,7 @@ class Twitter_Scraper:
         self,
         max_tweets=50,
         scrape_username=None,
+        scrape_tweet=None,
         scrape_hashtag=None,
         scrape_query=None,
         scrape_latest=True,
@@ -97,6 +101,7 @@ class Twitter_Scraper:
         self.scraper_details = {
             "type": None,
             "username": scrape_username,
+            "tweet": scrape_tweet,
             "hashtag": str(scrape_hashtag).replace("#", "")
             if scrape_hashtag is not None
             else None,
@@ -110,6 +115,9 @@ class Twitter_Scraper:
         if scrape_username is not None:
             self.scraper_details["type"] = "Username"
             self.router = self.go_to_profile
+        elif scrape_tweet is not None:
+            self.scraper_details["type"] = "Tweet"
+            self.router = self.go_to_tweet
         elif scrape_hashtag is not None:
             self.scraper_details["type"] = "Hashtag"
             self.router = self.go_to_hashtag
@@ -370,6 +378,16 @@ It may be due to the following:
             sleep(3)
         pass
 
+    def go_to_tweet(self):
+        if self.scraper_details['tweet'] is None:
+            print("Tweet ID not set.")
+            sys.exit(1)
+        else:
+            url = f"https://twitter.com/i/web/status/{self.scraper_details['tweet']}"
+            self.driver.get(url)
+            sleep(3)
+        pass
+
     def get_tweet_cards(self):
         self.tweet_cards = self.driver.find_elements(
             "xpath", '//article[@data-testid="tweet" and not(@disabled)]'
@@ -395,6 +413,7 @@ It may be due to the following:
         max_tweets=50,
         no_tweets_limit=False,
         scrape_username=None,
+        scrape_tweet=None,
         scrape_hashtag=None,
         scrape_query=None,
         scrape_latest=True,
@@ -405,6 +424,7 @@ It may be due to the following:
         self._config_scraper(
             max_tweets,
             scrape_username,
+            scrape_tweet,
             scrape_hashtag,
             scrape_query,
             scrape_latest,
@@ -420,6 +440,10 @@ It may be due to the following:
         if self.scraper_details["type"] == "Username":
             print(
                 "Scraping Tweets from @{}...".format(self.scraper_details["username"])
+            )
+        elif self.scraper_details["type"] == "Tweet":
+            print(
+                "Scraping Replies from Tweet ID {}...".format(self.scraper_details["tweet"])
             )
         elif self.scraper_details["type"] == "Hashtag":
             print(
