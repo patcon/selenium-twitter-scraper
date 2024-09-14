@@ -1,0 +1,3 @@
+- [ ] auto-click "show replies" when browsing tweet replies
+- [ ] auto-click "show more" for long replies (new page load)
+- [ ] auto-click tweets with lots of sub-replies
