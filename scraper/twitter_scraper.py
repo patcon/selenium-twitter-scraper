@@ -1,4 +1,5 @@
 import os
+import pickle
 import sys
 import pandas as pd
 from progress import Progress
@@ -186,19 +187,36 @@ class Twitter_Scraper:
         pass
 
     def login(self):
-        print()
-        print("Logging in to Twitter...")
 
         try:
             self.driver.maximize_window()
             self.driver.get(TWITTER_LOGIN_URL)
             sleep(3)
 
-            self._input_username()
-            self._input_unusual_activity()
-            self._input_password()
+            # Load cookies
+            if os.path.exists("cookies.pkl"):
+                print()
+                print("Loading cookies.pkl for Twitter session...")
+                self.driver.delete_all_cookies()
+                cookies = pickle.load(open("cookies.pkl", "rb"))
+                for cookie in cookies:
+                    self.driver.add_cookie(cookie)
 
-            cookies = self.driver.get_cookies()
+                # Refresh the page with cookies (if set)
+                self.driver.refresh()
+
+            else:
+                print()
+                print("Logging in to Twitter...")
+
+                self._input_username()
+                self._input_unusual_activity()
+                self._input_password()
+
+                cookies = self.driver.get_cookies()
+
+                # Save cookies
+                pickle.dump(cookies, open("cookies.pkl", "wb"))
 
             auth_token = None
 
