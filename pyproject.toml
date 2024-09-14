@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "selenium-twitter-scraper"
+version = "0.1.0"
+description = ""
+authors = ["Patrick Connolly <patrick.c.connolly@gmail.com>"]
+readme = "README.md"
+packages = [{include = "selenium_twitter_scraper"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fake-headers = ">=1.0.2"
+pandas = ">=2.0.3"
+python-dotenv = ">=1.0.0"
+selenium = ">=4.12.0"
+webdriver-manager = ">=4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
